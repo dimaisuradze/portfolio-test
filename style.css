@@ -1,0 +1,411 @@
+/* GLOBAL RESET & ANTI-GRAVITY RULES */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #ffffff;
+    color: #000000;
+    font-family: 'Courier Prime', Courier, monospace;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+img {
+    pointer-events: none;
+    user-select: none;
+    display: block;
+}
+
+/* HERO HEADER (Centered on Vertical Axis) */
+.hero-header {
+    padding: 15vh 5vw 10vh 5vw;
+    text-align: center;
+    /* Snaps to absolute center */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hero-name {
+    font-size: 8rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: -0.05em;
+    margin-bottom: 0.5rem;
+}
+
+.hero-title {
+    font-size: 1.5rem;
+    color: #555;
+    text-transform: uppercase;
+}
+
+/* PROCEDURAL MARQUEE CSS */
+.marquee {
+    overflow: hidden;
+    background: #fff;
+    padding: 3rem 0;
+    width: 100%;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+}
+
+.marquee__track {
+    display: flex;
+    align-items: center;
+    width: max-content;
+    will-change: transform;
+    /* Hardware acceleration for the JS loop */
+}
+
+.mq-logo {
+    height: 40px;
+    width: auto;
+    filter: grayscale(100%);
+    opacity: 0.8;
+    margin-right: 7rem;
+    /* The exact gap between logos */
+    flex-shrink: 0;
+}
+
+/* MAIN WORKS & ACCORDION (Centered Headers) */
+.project-container {
+    padding: 10vh 5vw;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.section-title {
+    font-size: 1.2rem;
+    margin-bottom: 4rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding-bottom: 1rem;
+    text-align: center;
+    /* Snaps to absolute center */
+}
+
+#project-list {
+    list-style: none;
+    padding: 0;
+}
+
+.project-row {
+    cursor: crosshair;
+}
+
+.row-header {
+    padding: 3rem 0;
+    transition: opacity 0.3s ease;
+    text-align: center;
+    /* Snaps the project names to the center axis */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Anchors the sub-labels strictly to the middle */
+}
+
+.project-row:hover .row-header {
+    opacity: 0.5;
+}
+
+.row-header h2 {
+    font-size: 3.5rem;
+    text-transform: uppercase;
+    line-height: 1;
+    letter-spacing: -0.05em;
+    font-weight: 700;
+}
+
+/* THE NEW SUB-LABELS */
+.project-category {
+    font-size: 1.2rem;
+    color: #888;
+    margin-top: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.row-content {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.project-row.is-open .row-content {
+    grid-template-rows: 1fr;
+}
+
+.row-grid {
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 3rem;
+    padding-bottom: 0;
+    transition: padding 0.5s ease;
+}
+
+.project-row.is-open .row-grid {
+    padding-bottom: 3rem;
+}
+
+.grid-text h3 {
+    font-size: 2rem;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.credits {
+    font-style: italic;
+    color: #666;
+    margin-bottom: 2rem !important;
+    border-bottom: 1px dashed #ccc;
+    padding-bottom: 1rem;
+}
+
+.grid-text p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    max-width: 90%;
+}
+
+.grid-visual {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #000;
+    overflow: hidden;
+}
+
+/* FLOATING HOVER ENGINE */
+.floating-el {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 400px;
+    height: 250px;
+    pointer-events: none;
+    will-change: transform, opacity;
+    transform: translate3d(-1000px, -1000px, 0);
+    opacity: 0;
+    transition: opacity 0.3s ease-out;
+    z-index: 9999;
+}
+
+.floating-el.is-visible {
+    opacity: 1;
+}
+
+body[data-scrolling="true"] .floating-el {
+    transition: none !important;
+}
+
+.img-stack {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.img-stack img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.img-stack.is-active {
+    opacity: 1;
+}
+
+/* THE FULL ARCHIVE (Movie Credits Ticker) */
+.archive-container {
+    padding: 5vh 5vw 10vh 5vw;
+    max-width: 1200px;
+    margin: 0 auto;
+    border-top: 1px solid #e0e0e0;
+}
+
+/* --- 2. ARCHIVE LIST ALIGNMENT --- */
+.archive-window {
+    height: 60vh;
+    overflow: hidden;
+    position: relative;
+    max-width: 900px;
+    /* Constricts the list on ultra-wide screens */
+    margin: 0 auto;
+    /* Forces the entire block to the absolute center */
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+}
+
+.archive-track {
+    display: flex;
+    flex-direction: column;
+    will-change: transform;
+}
+
+.archive-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.archive-item {
+    display: grid;
+    grid-template-columns: 0.5fr 2fr 2fr 1fr;
+    padding: 2rem 0;
+    font-size: 1.1rem;
+    transition: opacity 0.3s ease;
+    /* Smooth dimming transition */
+    cursor: crosshair;
+}
+
+/* The 20% Focus Trick */
+.archive-track:hover .archive-item {
+    opacity: 0.2;
+    /* Dims EVERY row when the mouse enters the window */
+}
+
+.archive-track .archive-item:hover {
+    opacity: 1 !important;
+    /* Keeps the hovered row at 100% */
+}
+
+.arch-year {
+    color: #888;
+}
+
+.arch-title {
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.arch-client {
+    color: #555;
+}
+
+.arch-role {
+    text-align: right;
+    font-style: italic;
+}
+
+/* THE CHARCOAL FOOTER & CTA */
+#contact-footer {
+    background: #111111;
+    /* Charcoal Grey - Easy on the eyes */
+    color: #e0e0e0;
+    padding: 10vh 5vw;
+    display: flex;
+    flex-direction: column;
+    gap: 6rem;
+    margin-top: 10vh;
+}
+
+.pitch-headline {
+    font-size: 4rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: -0.05em;
+    color: #ffffff;
+    margin-bottom: 4rem;
+    text-align: center;
+    /* Snaps "THE BOTTOM LINE." to the center */
+    width: 100%;
+}
+
+.pitch-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3rem;
+    border-top: 1px solid #333;
+    padding-top: 3rem;
+}
+
+.pitch-card strong {
+    color: #fff;
+    display: block;
+    text-transform: uppercase;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+}
+
+.pitch-card p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #999;
+}
+
+/* CONTACT SECTION BOTTOM */
+.contact-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-top: 1px solid #333;
+    padding-top: 3rem;
+}
+
+.contact-details {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #888;
+}
+
+.contact-links {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 1rem;
+}
+
+#secure-email {
+    font-size: 2.5rem;
+    text-transform: uppercase;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    transition: color 0.3s;
+}
+
+#secure-email:hover {
+    color: #555;
+}
+
+.imdb-link {
+    color: #888;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid #444;
+    padding: 0.8rem 1.5rem;
+    font-size: 0.9rem;
+    transition: all 0.3s;
+}
+
+.imdb-link:hover {
+    background: #fff;
+    color: #000;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .pitch-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .contact-section {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 3rem;
+    }
+
+    .contact-links {
+        align-items: flex-start;
+    }
+}
