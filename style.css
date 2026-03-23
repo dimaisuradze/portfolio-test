@@ -1,4 +1,4 @@
-/* GLOBAL RESET & ANTI-GRAVITY RULES */
+/* GLOBAL RESET */
 * {
     margin: 0;
     padding: 0;
@@ -19,18 +19,43 @@ img {
     display: block;
 }
 
-/* HERO HEADER (Centered on Vertical Axis) */
-.hero-header {
-    padding: 15vh 5vw 10vh 5vw;
-    text-align: center;
-    /* Snaps to absolute center */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+/* =========================================
+   1. FLUID ARCHITECTURE (75vw Container)
+   ========================================= */
+.fluid-container {
+    width: 75vw;
+    margin: 0 auto;
+    padding-top: 10vh;
+    padding-bottom: 10vh;
 }
 
+.archive-wrapper {
+    border-top: 1px solid #e0e0e0;
+}
+
+/* =========================================
+   2. THE CINEMATIC FRONT DOOR
+   ========================================= */
+.hero-header {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding: 0 5vw;
+}
+
+.hero-content {
+    text-align: center;
+    margin-bottom: 8rem;
+    width: 100%;
+}
+
+/* Fluid Typography */
 .hero-name {
-    font-size: 8rem;
+    /* Lowered minimum to 2.2rem so it doesn't break on extreme narrow screens like the Z Fold 5 */
+    font-size: clamp(2.2rem, 8vw, 10rem);
     text-transform: uppercase;
     font-weight: 700;
     letter-spacing: -0.05em;
@@ -38,19 +63,83 @@ img {
 }
 
 .hero-title {
-    font-size: 1.5rem;
+    font-size: clamp(0.85rem, 1.5vw, 2rem);
     color: #555;
     text-transform: uppercase;
+    margin-bottom: 3rem;
+    /* Increased distance from the hook quote */
 }
 
-/* PROCEDURAL MARQUEE CSS */
+/* Default state: stay on one line on desktop */
+.mobile-break {
+    display: inline;
+}
+
+.hero-hook {
+    font-size: clamp(1rem, 2vw, 2.5rem);
+    font-style: italic;
+    color: #888;
+    /* Lighter sleek gray */
+    font-weight: 700;
+    max-width: 80vw;
+    margin: 0 auto;
+}
+
+.main-nav {
+    display: flex;
+    gap: 4rem;
+    position: absolute;
+    bottom: 10vh;
+}
+
+.nav-btn {
+    font-family: 'Courier Prime', Courier, monospace;
+    font-size: 1.5rem;
+    font-weight: 700;
+    background: transparent;
+    border: none;
+    border-bottom: 4px solid transparent;
+    color: #888;
+    cursor: crosshair;
+    padding-bottom: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.nav-btn:hover {
+    color: #000;
+}
+
+.nav-btn.is-active {
+    color: #000;
+    border-bottom: 4px solid #000;
+}
+
+.view-section {
+    display: none;
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+}
+
+.view-section.is-active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+/* =========================================
+   3. MARQUEE & SELECTED WORKS
+   ========================================= */
 .marquee {
+    display: flex;
     overflow: hidden;
+    user-select: none;
     background: #fff;
-    padding: 3rem 0;
+    padding: 2.5rem 0;
     width: 100%;
-    border-top: 1px solid #000;
-    border-bottom: 1px solid #000;
 }
 
 .marquee__track {
@@ -58,35 +147,24 @@ img {
     align-items: center;
     width: max-content;
     will-change: transform;
-    /* Hardware acceleration for the JS loop */
 }
 
 .mq-logo {
     height: 40px;
     width: auto;
-    filter: grayscale(100%);
+    filter: grayscale(90%);
     opacity: 0.8;
     margin-right: 7rem;
-    /* The exact gap between logos */
     flex-shrink: 0;
 }
 
-/* MAIN WORKS & ACCORDION (Centered Headers) */
-.project-container {
-    padding: 10vh 5vw;
-    max-width: 1400px;
-    margin: 0 auto;
-}
-
 .section-title {
-    font-size: 1.2rem;
+    font-size: clamp(1rem, 1.2vw, 2rem);
     margin-bottom: 4rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    padding-bottom: 1rem;
     text-align: center;
-    /* Snaps to absolute center */
 }
 
 #project-list {
@@ -102,11 +180,9 @@ img {
     padding: 3rem 0;
     transition: opacity 0.3s ease;
     text-align: center;
-    /* Snaps the project names to the center axis */
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* Anchors the sub-labels strictly to the middle */
 }
 
 .project-row:hover .row-header {
@@ -114,14 +190,14 @@ img {
 }
 
 .row-header h2 {
-    font-size: 3.5rem;
+    font-size: clamp(2.5rem, 4vw, 5rem);
     text-transform: uppercase;
     line-height: 1;
     letter-spacing: -0.05em;
     font-weight: 700;
+    text-align: center;
 }
 
-/* THE NEW SUB-LABELS */
 .project-category {
     font-size: 1.2rem;
     color: #888;
@@ -183,9 +259,11 @@ img {
     overflow: hidden;
 }
 
-/* FLOATING HOVER ENGINE */
+/* =========================================
+   4. FLOATING HOVER ENGINE
+   ========================================= */
 .floating-el {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 400px;
@@ -200,10 +278,6 @@ img {
 
 .floating-el.is-visible {
     opacity: 1;
-}
-
-body[data-scrolling="true"] .floating-el {
-    transition: none !important;
 }
 
 .img-stack {
@@ -223,31 +297,31 @@ body[data-scrolling="true"] .floating-el {
     opacity: 1;
 }
 
-/* THE FULL ARCHIVE (Movie Credits Ticker) */
-.archive-container {
-    padding: 5vh 5vw 10vh 5vw;
-    max-width: 1200px;
-    margin: 0 auto;
-    border-top: 1px solid #e0e0e0;
-}
-
-/* --- 2. ARCHIVE LIST ALIGNMENT --- */
+/* =========================================
+   5. FULL ARCHIVE
+   ========================================= */
 .archive-window {
     height: 60vh;
-    overflow: hidden;
+    overflow-y: auto;
     position: relative;
-    max-width: 900px;
-    /* Constricts the list on ultra-wide screens */
+    width: 100%;
     margin: 0 auto;
-    /* Forces the entire block to the absolute center */
     -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
     mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+}
+
+.archive-window::-webkit-scrollbar {
+    display: none;
+}
+
+.archive-window {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
 .archive-track {
     display: flex;
     flex-direction: column;
-    will-change: transform;
 }
 
 .archive-list {
@@ -261,60 +335,69 @@ body[data-scrolling="true"] .floating-el {
     padding: 2rem 0;
     font-size: 1.1rem;
     transition: opacity 0.3s ease;
-    /* Smooth dimming transition */
     cursor: crosshair;
 }
 
-/* The 20% Focus Trick */
-.archive-track:hover .archive-item {
+.archive-window:hover .archive-item {
     opacity: 0.2;
-    /* Dims EVERY row when the mouse enters the window */
 }
 
-.archive-track .archive-item:hover {
+.archive-window .archive-item:hover {
     opacity: 1 !important;
-    /* Keeps the hovered row at 100% */
 }
 
-.arch-year {
-    color: #888;
+/* =========================================
+   6. BIO / SCREENPLAY
+   ========================================= */
+.script-container {
+    font-size: 1.2rem;
+    line-height: 1.6;
 }
 
-.arch-title {
+.script-scene {
     font-weight: 700;
     text-transform: uppercase;
+    margin-bottom: 2rem;
 }
 
-.arch-client {
-    color: #555;
+.script-action {
+    margin-bottom: 2rem;
 }
 
-.arch-role {
-    text-align: right;
-    font-style: italic;
+.script-character {
+    margin-left: 30%;
+    text-transform: uppercase;
+    margin-bottom: 0;
+    font-weight: 700;
 }
 
-/* THE CHARCOAL FOOTER & CTA */
+.script-dialogue {
+    margin-left: 20%;
+    margin-right: 15%;
+    margin-bottom: 2rem;
+}
+
+/* =========================================
+   7. CHARCOAL FOOTER
+   ========================================= */
 #contact-footer {
     background: #111111;
-    /* Charcoal Grey - Easy on the eyes */
     color: #e0e0e0;
-    padding: 10vh 5vw;
+    padding: 10vh 12.5vw;
     display: flex;
     flex-direction: column;
     gap: 6rem;
-    margin-top: 10vh;
+    margin-top: 5vh;
 }
 
 .pitch-headline {
-    font-size: 4rem;
+    font-size: clamp(2.5rem, 4vw, 5rem);
     text-transform: uppercase;
     font-weight: 700;
     letter-spacing: -0.05em;
     color: #ffffff;
     margin-bottom: 4rem;
     text-align: center;
-    /* Snaps "THE BOTTOM LINE." to the center */
     width: 100%;
 }
 
@@ -341,7 +424,6 @@ body[data-scrolling="true"] .floating-el {
     color: #999;
 }
 
-/* CONTACT SECTION BOTTOM */
 .contact-section {
     display: flex;
     justify-content: space-between;
@@ -354,6 +436,13 @@ body[data-scrolling="true"] .floating-el {
     font-size: 1.1rem;
     line-height: 1.8;
     color: #888;
+}
+
+.phone-number {
+    margin-top: 0.5rem;
+    color: #aaa;
+    font-weight: 700;
+    letter-spacing: 0.05em;
 }
 
 .contact-links {
@@ -377,23 +466,22 @@ body[data-scrolling="true"] .floating-el {
     color: #555;
 }
 
-.imdb-link {
-    color: #888;
-    text-transform: uppercase;
-    text-decoration: none;
-    border: 1px solid #444;
-    padding: 0.8rem 1.5rem;
-    font-size: 0.9rem;
-    transition: all 0.3s;
-}
-
-.imdb-link:hover {
-    background: #fff;
-    color: #000;
-}
-
-/* Responsive adjustments */
+/* =========================================
+   8. MOBILE RESPONSIVENESS
+   ========================================= */
 @media (max-width: 1024px) {
+    .fluid-container {
+        width: 90vw;
+    }
+
+    .archive-item {
+        grid-template-columns: 0.5fr 2fr 1.5fr;
+    }
+
+    .arch-role {
+        display: none;
+    }
+
     .pitch-grid {
         grid-template-columns: 1fr;
         gap: 2rem;
@@ -407,5 +495,68 @@ body[data-scrolling="true"] .floating-el {
 
     .contact-links {
         align-items: flex-start;
+    }
+
+    #contact-footer {
+        padding: 10vh 5vw;
+    }
+}
+
+@media (max-width: 768px) {
+
+    /* FORCES THE SUBTITLE TO BREAK EXACTLY AT THE SLASH ON PHONES */
+    .mobile-break {
+        display: block;
+        margin-top: 0.3rem;
+    }
+
+    .script-character {
+        margin-left: 0;
+    }
+
+    .script-dialogue {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .marquee__item {
+        gap: 3rem;
+        padding-right: 3rem;
+    }
+
+    .marquee__item img {
+        height: 35px;
+    }
+
+    .row-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .grid-visual {
+        order: -1;
+        aspect-ratio: 16/9;
+    }
+
+    .floating-el {
+        display: none !important;
+    }
+
+    .project-row:hover .row-header {
+        opacity: 1;
+    }
+
+    .archive-item {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+        padding: 1.5rem 0;
+    }
+
+    .arch-title {
+        font-size: 1.3rem;
+    }
+
+    #secure-email {
+        font-size: 1.5rem;
     }
 }

@@ -1,14 +1,35 @@
 document.addEventListener("DOMContentLoaded", () => {
 
     // ==========================================
-    // 0. PROCEDURAL INFINITE MARQUEE TREADMILL
+    // 0. TAB SWITCHING LOGIC (SPA)
+    // ==========================================
+    const btnWork = document.getElementById('btn-work');
+    const btnBio = document.getElementById('btn-bio');
+    const secWork = document.getElementById('work-section');
+    const secBio = document.getElementById('bio-section');
+
+    const switchTab = (showBtn, hideBtn, showSec, hideSec) => {
+        hideBtn.classList.remove('is-active');
+        showBtn.classList.add('is-active');
+
+        hideSec.classList.remove('is-active');
+        setTimeout(() => {
+            showSec.classList.add('is-active');
+        }, 50);
+    };
+
+    if (btnWork && btnBio) {
+        btnWork.addEventListener('click', () => switchTab(btnWork, btnBio, secWork, secBio));
+        btnBio.addEventListener('click', () => switchTab(btnBio, btnWork, secBio, secWork));
+    }
+
+    // ==========================================
+    // 1. PROCEDURAL MARQUEE
     // ==========================================
     const track = document.getElementById('marquee-track');
-
     if (track) {
         const logos = Array.from(track.children);
         let totalWidth = 0;
-
         logos.forEach(logo => {
             const style = window.getComputedStyle(logo);
             const margin = parseFloat(style.marginRight);
@@ -17,56 +38,44 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const requiredWidth = window.innerWidth * 2;
         let currentWidth = totalWidth;
-
         while (currentWidth < requiredWidth) {
-            logos.forEach(logo => {
-                const clone = logo.cloneNode(true);
-                track.appendChild(clone);
-            });
+            logos.forEach(logo => track.appendChild(logo.cloneNode(true)));
             currentWidth += totalWidth;
         }
 
         let currentX = 0;
-        const speed = 1.0; // Adjust speed here
+        const speed = 1.0;
+        let isPaused = false;
 
         const animateMarquee = () => {
-            currentX -= speed;
-            if (Math.abs(currentX) >= totalWidth) {
-                currentX = 0;
+            if (!isPaused) {
+                currentX -= speed;
+                if (Math.abs(currentX) >= totalWidth) currentX = 0;
+                track.style.transform = `translate3d(${currentX}px, 0, 0)`;
             }
-            track.style.transform = `translate3d(${currentX}px, 0, 0)`;
             requestAnimationFrame(animateMarquee);
         };
 
-        let isPaused = false;
         track.addEventListener('mouseenter', () => isPaused = true);
         track.addEventListener('mouseleave', () => isPaused = false);
-
-        const loopMarquee = () => {
-            if (!isPaused) animateMarquee();
-            else requestAnimationFrame(loopMarquee);
-        };
-
         animateMarquee();
     }
 
     // ==========================================
-    // 1. EMAIL OBFUSCATION
+    // 2. EMAIL OBFUSCATION
     // ==========================================
     const emailLink = document.getElementById('secure-email');
     if (emailLink) {
         emailLink.addEventListener('click', (e) => {
             e.preventDefault();
-            window.location.href = `mailto:hello@mylastname.eu`; // Update this later
+            window.location.href = `mailto:hello@dimimaisuradze.eu`;
         });
     }
 
     // ==========================================
-    // 2. THE FLOATING & ACCORDION ENGINE
+    // 3. FLOATING & ACCORDION ENGINE
     // ==========================================
     const projectList = document.getElementById('project-list');
-
-    // We only run this if the project list exists
     if (projectList) {
         const floatEl = document.createElement('div');
         floatEl.className = 'floating-el';
@@ -81,7 +90,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll('.project-row').forEach(row => {
             const id = row.dataset.id;
             const images = row.dataset.images.split(',');
-
             const stackContainer = document.createElement('div');
             stackContainer.className = 'img-stack';
 
@@ -93,7 +101,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 img.style.opacity = '0';
                 stackContainer.appendChild(img);
             });
-
             imageStacks[id] = stackContainer;
         });
 
@@ -118,11 +125,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 const latest = inputBuffer[inputBuffer.length - 1];
                 const floatWidth = floatEl.offsetWidth;
                 const floatHeight = floatEl.offsetHeight;
-                let x = latest.pageX + 20;
-                let y = latest.pageY + 20;
 
-                if (latest.clientX + 20 + floatWidth > window.innerWidth) x = latest.pageX - floatWidth - 20;
-                if (latest.clientY + 20 + floatHeight > window.innerHeight) y = latest.pageY - floatHeight - 20;
+                // FIXED to clientX/Y to immune scroll repaints
+                let x = latest.clientX + 20;
+                let y = latest.clientY + 20;
+
+                if (latest.clientX + 20 + floatWidth > window.innerWidth) x = latest.clientX - floatWidth - 20;
+                if (latest.clientY + 20 + floatHeight > window.innerHeight) y = latest.clientY - floatHeight - 20;
 
                 floatEl.style.transform = `translate3d(${x}px, ${y}px, 0)`;
                 inputBuffer = [];
@@ -135,9 +144,12 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!targetRow || targetRow.classList.contains('is-open')) return;
 
             const id = targetRow.dataset.id;
+            floatEl.innerHTML = '';
+
             activeStack = imageStacks[id];
             floatEl.appendChild(activeStack);
             activeStack.classList.add('is-active');
+            stopMotionFrame = 0;
 
             cancelAnimationFrame(animationReq);
             animationReq = requestAnimationFrame(renderStopMotion);
@@ -147,7 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
             hoverController = new AbortController();
 
             targetRow.addEventListener('pointermove', (event) => {
-                inputBuffer.push({ pageX: event.pageX, pageY: event.pageY, clientX: event.clientX, clientY: event.clientY });
+                inputBuffer.push({ clientX: event.clientX, clientY: event.clientY });
                 if (!isTicking) { requestAnimationFrame(renderPosition); isTicking = true; }
             }, { passive: true, signal: hoverController.signal });
         });
@@ -155,7 +167,6 @@ document.addEventListener("DOMContentLoaded", () => {
         projectList.addEventListener('mouseout', (e) => {
             const targetRow = e.target.closest('.project-row');
             if (!targetRow || targetRow.contains(e.relatedTarget)) return;
-
             floatEl.classList.remove('is-visible');
             if (hoverController) hoverController.abort();
         });
@@ -187,51 +198,62 @@ document.addEventListener("DOMContentLoaded", () => {
             gridVisual.appendChild(activeStack);
             activeStack.classList.add('is-active');
 
+            stopMotionFrame = 0;
             cancelAnimationFrame(animationReq);
             animationReq = requestAnimationFrame(renderStopMotion);
         });
     }
 
     // ==========================================
-    // 3. THE TYPOGRAPHIC TICKER (Movie Credits Fix)
+    // 4. ARCHIVE TICKER (Synced Native Scroll)
     // ==========================================
+    const archiveWindow = document.getElementById('archive-window');
     const archiveTrack = document.getElementById('archive-track');
 
-    if (archiveTrack) {
+    if (archiveWindow && archiveTrack) {
         const originalList = archiveTrack.querySelector('.archive-list');
-
-        // Clone the list for infinite looping
         const clone = originalList.cloneNode(true);
         archiveTrack.appendChild(clone);
 
-        let currentY = 0;
-        const scrollSpeed = 0.5; // Smooth slow scroll
-        let isArchivePaused = false;
+        // Slowed down by 25%
+        const scrollSpeed = 0.35;
+        let isHoveringArchive = false;
+
+        // High-precision tracker synced with actual browser scroll
+        let currentScroll = 0;
 
         const animateArchive = () => {
-            if (!isArchivePaused) {
-                currentY -= scrollSpeed;
+            if (!isHoveringArchive) {
+                currentScroll += scrollSpeed;
 
-                // Get exact height dynamically (Fixes the font-loading bug)
-                const listHeight = originalList.getBoundingClientRect().height;
-
-                // Reset loop seamlessly
-                if (Math.abs(currentY) >= listHeight && listHeight > 0) {
-                    currentY = 0;
+                // If we reach the bottom of the original list, teleport to top
+                if (currentScroll >= originalList.offsetHeight) {
+                    currentScroll = 0;
                 }
 
-                archiveTrack.style.transform = `translate3d(0, ${currentY}px, 0)`;
+                // Physically scrolls the div window
+                archiveWindow.scrollTop = currentScroll;
             }
             requestAnimationFrame(animateArchive);
         };
 
-        // Pause on hover
-        archiveTrack.addEventListener('mouseenter', () => isArchivePaused = true);
-        archiveTrack.addEventListener('mouseleave', () => isArchivePaused = false);
+        // When user hovers, we pause our auto-engine so they can manual scroll
+        archiveWindow.addEventListener('mouseenter', () => {
+            isHoveringArchive = true;
+        });
 
-        // Wait a split second to ensure fonts/CSS are loaded before starting
-        setTimeout(() => {
-            animateArchive();
-        }, 100);
+        // When manual scrolling happens, we continuously sync our engine tracker 
+        // to their exact scrollbar position so it doesn't jump when they leave
+        archiveWindow.addEventListener('scroll', () => {
+            if (isHoveringArchive) {
+                currentScroll = archiveWindow.scrollTop;
+            }
+        });
+
+        archiveWindow.addEventListener('mouseleave', () => {
+            isHoveringArchive = false;
+        });
+
+        setTimeout(() => { animateArchive(); }, 200);
     }
 });
