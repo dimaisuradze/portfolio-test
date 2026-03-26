@@ -1,0 +1,94 @@
+/* =========================================
+   COMPONENT IMPORTS (We will create these next)
+   ========================================= */
+@import url('./components/01-preloader/preloader.css');
+@import url('./components/02-header/header.css');
+@import url('./components/03-hero/hero.css');
+@import url('./components/04-marquee/marquee.css');
+@import url('./components/05-accordion/accordion.css');
+@import url('./components/06-archive/archive.css');
+@import url('./components/07-mouse/mouse.css');
+
+/* =========================================
+   GLOBAL VARIABLES & HYGIENE
+   ========================================= */
+:root {
+    --z-footer: 1;
+    --z-main: 2;
+    --z-archive-mask: 5;
+    --z-archive-content: 20;
+    --z-header: 100;
+    --z-preloader: 999;
+    --z-tooltip: 9999;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Courier Prime', Courier, monospace;
+}
+
+body {
+    background-color: #ffffff;
+    color: #000000;
+    -webkit-font-smoothing: antialiased;
+}
+
+body.is-loading {
+    overflow: hidden;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* =========================================
+   LENIS VIRTUAL SCROLL ENGINE CSS
+   ========================================= */
+html.lenis,
+html.lenis body {
+    height: auto;
+}
+
+.lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth[data-lenis-prevent] {
+    overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+    overflow: hidden;
+}
+
+.lenis.lenis-smooth iframe {
+    pointer-events: none;
+}
+
+/* =========================================
+   SMOOTH WRAPPER (Global Base)
+   ========================================= */
+#smooth-wrapper {
+    position: relative;
+    z-index: var(--z-main);
+    /* Room for the parallax footer */
+}
+
+/* Bug 1 Fix: GSAP Shield override */
+.pin-spacer {
+    pointer-events: none !important;
+}
+
+.pin-spacer>* {
+    pointer-events: auto;
+}

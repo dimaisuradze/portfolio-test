@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Portfolio of Dimitri Maisuradze, Assistant Art Director and Set Builder.">
+    <title>Dimitri Maisuradze | Assistant Art Director</title>
+
+    <link rel="icon" type="image/png" href="assets/favicon.png">
+
+    <!-- FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+
+    <!-- THE MASTER CSS HUB -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- EXTERNAL LIBRARIES -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js" defer></script>
+
+    <!-- THE ASYNC ORCHESTRATOR (Note: type="module" is critical for ES6 imports) -->
+    <script type="module" src="main.js" defer></script>
+</head>
+
+<body class="is-loading">
+
+    <!-- TOP-LEVEL LAYERS (Fixed to screen) -->
+    <div id="layer-preloader"></div>
+    <div id="layer-header"></div>
+    <div id="layer-mouse-trackers"></div>
+
+    <!-- THE SCROLLABLE DOCUMENT -->
+    <div id="smooth-wrapper">
+        <div id="smooth-content">
+            <div id="layer-hero"></div>
+            <div id="layer-marquee"></div>
+            <div id="layer-accordion"></div>
+            <div id="layer-archive"></div>
+        </div>
+    </div>
+
+</body>
+
+</html>
