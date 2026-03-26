@@ -1,0 +1,58 @@
+/* =========================================
+   THE HERO SECTION
+   ========================================= */
+.hero-header {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding: 0 5vw;
+    z-index: 10;
+}
+
+.hero-header:focus-visible {
+    outline: none;
+}
+
+.hero-content {
+    text-align: center;
+    width: 100%;
+}
+
+.hero-name {
+    font-size: clamp(2.2rem, 8vw, 10rem);
+    text-transform: uppercase;
+    font-weight: 400;
+    letter-spacing: -0.05em;
+    margin-bottom: 0.5rem;
+}
+
+.hero-title {
+    font-size: clamp(0.85rem, 1.5vw, 2rem);
+    color: #555;
+    text-transform: uppercase;
+    margin-bottom: 3rem;
+}
+
+.mobile-break {
+    display: inline;
+}
+
+.hero-hook {
+    font-size: clamp(1rem, 2vw, 2.5rem);
+    font-style: italic;
+    color: #888;
+    font-weight: 700;
+    max-width: 80vw;
+    margin: 0 auto;
+    min-height: 3rem;
+}
+
+@media (max-width: 768px) {
+    .mobile-break {
+        display: block;
+        margin-top: 0.3rem;
+    }
+}

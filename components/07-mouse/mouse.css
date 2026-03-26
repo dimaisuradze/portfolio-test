@@ -1,0 +1,30 @@
+.anti-gravity-tooltip {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #000;
+    color: #fff;
+    padding: 0.8rem 1.5rem;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    /* STRICT FIX: Force pointer-events through element and all children */
+    pointer-events: none !important;
+    z-index: var(--z-tooltip);
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.anti-gravity-tooltip * {
+    pointer-events: none !important;
+}
+
+.anti-gravity-tooltip.is-visible {
+    opacity: 1;
+}
+
+.anti-gravity-tooltip.is-visible {
+    opacity: 1;
+}

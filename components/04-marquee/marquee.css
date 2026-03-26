@@ -1,0 +1,77 @@
+.marquee {
+    display: flex;
+    overflow: hidden;
+    user-select: none;
+    background: #fff;
+    padding: 4rem 0;
+    width: 100%;
+    border-bottom: none;
+    z-index: 10;
+    position: relative;
+}
+
+
+
+.marquee__inner {
+    display: flex;
+    align-items: center;
+    width: max-content;
+    will-change: transform;
+    animation: scrollMarquee 25s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .marquee__inner {
+        animation: none;
+    }
+}
+
+.mq-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 8rem;
+    gap: 1.5rem;
+}
+
+.mq-logo {
+    height: 45px;
+    width: auto;
+    filter: grayscale(100%);
+    opacity: 0.6;
+    transition: opacity 0.3s;
+}
+
+.mq-item:hover .mq-logo {
+    opacity: 1;
+}
+
+.mq-label {
+    display: none;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #888;
+    letter-spacing: 0.05em;
+    text-align: center;
+    white-space: nowrap;
+}
+
+@keyframes scrollMarquee {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+@media (max-width: 768px) {
+    .mq-label {
+        display: block;
+    }
+
+    .mq-item {
+        margin-right: 4rem;
+    }
+}
