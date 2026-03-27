@@ -2,15 +2,18 @@
    THE BIO SECTION (Screenplay Brutalism)
    ========================================= */
 .bio-section {
-    display: none; /* Hidden by default, toggled via JS */
+    display: none;
     width: 100vw;
     min-height: 100vh;
     background-color: #ffffff;
     color: #111111;
-    padding: 20vh 5vw 10vh 5vw;
+    padding-top: 40vh;
+    /* top margin of 40vh */
+    padding-bottom: 10vh;
     z-index: 10;
     opacity: 0;
     transition: opacity 0.5s ease;
+    box-sizing: border-box;
 }
 
 .bio-section.is-active {
@@ -19,8 +22,19 @@
 }
 
 .bio-container {
-    max-width: 800px;
+    max-width: calc(100vw - 100vh);
+    /* width = viewport width minus 2*50vh */
     margin: 0 auto;
+    /* auto horizontal margins */
+    width: 100%;
+}
+
+/* Fallback for screens where 100vh > viewport width (e.g., mobile portrait) */
+@media (max-width: 768px) {
+    .bio-container {
+        max-width: 90vw;
+        margin: 0 auto;
+    }
 }
 
 .bio-header {
