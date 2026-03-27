@@ -5,18 +5,22 @@ import { initMarquee } from './components/04-marquee/marquee.js';
 import { initAccordion } from './components/05-accordion/accordion.js';
 import { initArchive } from './components/06-archive/archive.js';
 import { initMouseTracker } from './components/07-mouse/mouse.js';
+// [NEW] Import the Bio Router
+import { initBioRouter } from './components/08-bio/bio.js';
 
 // =========================================
 // 1. Define all component HTML files to inject
 // =========================================
-const componentsToLoad = [
+const componentsToLoad =[
     { id: 'layer-preloader', url: './components/01-preloader/preloader.html' },
     { id: 'layer-header', url: './components/02-header/header.html' },
     { id: 'layer-mouse-trackers', url: './components/07-mouse/mouse.html' },
     { id: 'layer-hero', url: './components/03-hero/hero.html' },
     { id: 'layer-marquee', url: './components/04-marquee/marquee.html' },
     { id: 'layer-accordion', url: './components/05-accordion/accordion.html' },
-    { id: 'layer-archive', url: './components/06-archive/archive.html' }
+    { id: 'layer-archive', url: './components/06-archive/archive.html' },
+    // [NEW] Add the Bio layer to the fetch array
+    { id: 'layer-bio', url: './components/08-bio/bio.html' }
 ];
 
 // =========================================
@@ -91,6 +95,9 @@ async function bootApplication() {
     initMarquee();
     initAccordion();
     initArchive();
+    
+    // [NEW] Boot the Bio SPA Router
+    initBioRouter();
 
     // Step 4: Start the preloader. When it finishes, unlock Lenis and scramble hero text.
     initPreloader(() => {

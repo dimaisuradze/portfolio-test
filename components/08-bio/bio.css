@@ -1,0 +1,60 @@
+/* =========================================
+   THE BIO SECTION (Screenplay Brutalism)
+   ========================================= */
+.bio-section {
+    display: none; /* Hidden by default, toggled via JS */
+    width: 100vw;
+    min-height: 100vh;
+    background-color: #ffffff;
+    color: #111111;
+    padding: 20vh 5vw 10vh 5vw;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.bio-section.is-active {
+    display: block;
+    opacity: 1;
+}
+
+.bio-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.bio-header {
+    margin-bottom: 4rem;
+    border-bottom: 2px solid #111;
+    padding-bottom: 1rem;
+}
+
+.bio-header h2 {
+    font-size: clamp(2rem, 5vw, 4rem);
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: -0.05em;
+    margin-bottom: 0.5rem;
+}
+
+.bio-meta {
+    font-size: 0.9rem;
+    color: #888;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+}
+
+.bio-copy {
+    font-size: clamp(1.1rem, 2vw, 1.4rem);
+    line-height: 1.8;
+}
+
+.bio-copy p {
+    margin-bottom: 2rem;
+}
+
+/* Screenplay indent effect for middle paragraphs */
+.bio-copy p:nth-child(even) {
+    padding-left: 10%;
+    color: #333;
+}
