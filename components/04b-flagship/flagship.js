@@ -5,7 +5,7 @@ export function initFlagship() {
 
     const frames = container.querySelectorAll('.flip-frame');
     const flipbookTl = gsap.timeline({ repeat: -1, paused: true });
-    const frameDuration = 0.35;
+    const frameDuration = 0.45;
 
     gsap.set(frames, { opacity: 0 });
     gsap.set(frames[0], { opacity: 1 });
