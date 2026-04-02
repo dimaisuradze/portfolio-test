@@ -89,8 +89,28 @@ export function initAccordion() {
                 if (btn) btn.setAttribute('aria-expanded', 'true');
                 if (content) content.setAttribute('aria-hidden', 'false');
                 parallaxVideo.play().catch(e => { });
+
+                // Kill hovering effects immediately on click
                 if (floatingImageEl) floatingImageEl.classList.remove('is-visible');
                 clearInterval(stopMotionInterval);
+
+                // --- ALIGN CONTENT AREA TO TOP OF BROWSER ---
+                // We use a small delay to allow the CSS grid-row transition to start
+                setTimeout(() => {
+                    if (window.lenis) {
+                        const header = row.querySelector('.row-header');
+                        // Get the height of the white bar
+                        const hHeight = header ? header.offsetHeight : 120;
+
+                        window.lenis.scrollTo(row, {
+                            // POSITIVE offset scrolls PAST the target.
+                            // This pushes the clicked white bar off the top of the screen.
+                            offset: hHeight,
+                            duration: 1.4,
+                            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+                        });
+                    }
+                }, 250);
             }
 
             if (content) {
