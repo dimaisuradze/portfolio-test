@@ -64,6 +64,20 @@
     filter: invert(1);
 }
 
+.header-logo-mark {
+    pointer-events: auto;
+    transition: transform 0.3s ease;
+    display: inline-block;
+}
+
+.header-logo-mark:hover {
+    transform: scale(1.1); /* Slight pop when hovered */
+}
+
+.header-logo-mark:active {
+    transform: scale(0.95); /* Slight 'click' feel */
+}
+
 .nav-btn-magnetic {
     background: transparent;
     border: none;

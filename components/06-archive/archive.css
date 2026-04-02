@@ -5,7 +5,7 @@
     position: relative;
     width: 100vw;
     background-color: #ffffff;
-    z-index: 5;
+    z-index: var(--z-archive-mask); /* z-index 5 */
 }
 
 .archive-pin {
@@ -17,32 +17,6 @@
     isolation: isolate;
 }
 
-/* LAYER 5: FOOTER (BOTTOM-MOST LAYER) */
-/* Footer container – dark background already set */
-.footer-section {
-    position: absolute !important;
-    bottom: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: #0a0a0a;
-    color: #e0e0e0;
-    overflow: hidden;
-    z-index: 1 !important;
-}
-
-
-/* =========================================
-   DYNAMIC SPACER
-   ========================================= */
-.archive-spacer {
-    width: 100vw;
-    height: calc(clamp(2.5rem, 4vw, 5rem) + 6rem);
-    background-color: transparent;
-    position: relative;
-    z-index: 5;
-}
-
 /* LAYER 4: DOOR GROUP (TOP-MOST LAYER) */
 .archive-door-group {
     position: absolute;
@@ -52,6 +26,8 @@
     z-index: 10 !important;
     background-color: transparent !important;
     will-change: transform;
+    /* FIX: Allow clicks to pass through to the footer layer below */
+    pointer-events: none; 
 }
 
 .archive-bg-plate {
@@ -71,11 +47,10 @@
     height: 100vh;
     clip-path: inset(0 50% 0 50%);
     -webkit-clip-path: inset(0 50% 0 50%);
-    -webkit-transform: translateZ(0);
-    transform: translate3d(0, 0, 0);
-    backface-visibility: hidden;
-    will-change: clip-path, transform, opacity;
     z-index: 2;
+    will-change: clip-path, transform, opacity;
+    /* FIX: Don't block clicks */
+    pointer-events: none;
 }
 
 .archive-bg {
@@ -94,60 +69,47 @@
     z-index: 10;
 }
 
+/* LAYER: THE PROJECT TEXT CONTENT */
 .archive-content {
     position: absolute;
     inset: 0;
-    z-index: var(--z-archive-content);
+    z-index: var(--z-archive-content); /* z-index 20 */
     width: 100%;
     height: 100%;
     color: #ffffff;
-    pointer-events: none;
+    /* FIX: Container passes through, blocks are clickable */
+    pointer-events: none; 
 }
 
 .staggered-grid {
     display: grid;
     width: 90vw;
     margin: 0 auto;
-    padding-top: 100vh;
+    /* FIX: Reduced from 100vh so text appears at the right scroll point */
+    padding-top: 50vh; 
     padding-bottom: 60vh;
     row-gap: 35vh;
     will-change: transform;
 }
 
-/* Desktop (≥ 1024px) – 3 columns */
-@media (min-width: 1024px) {
-    .staggered-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
+.archive-block {
+    padding: 1rem;
+    /* FIX: Make individual projects clickable */
+    pointer-events: auto; 
+    cursor: crosshair;
 }
 
-/* Tablet (768px – 1023px) – 2 columns */
-@media (min-width: 768px) and (max-width: 1023px) {
-    .staggered-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-/* Mobile (≤ 767px) – 1 column */
-@media (max-width: 767px) {
-    .staggered-grid {
-        grid-template-columns: 1fr;
-        width: 85vw;
-        /* slightly wider for mobile */
-        padding-top: 20vh;
-        padding-bottom: 20vh;
-        row-gap: 15vh;
-    }
-
-    .archive-block {
-        padding: 1rem;
-        text-align: center;
-    }
+/* Responsive Grid columns */
+@media (min-width: 1024px) { .staggered-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 768px) and (max-width: 1023px) { .staggered-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 767px) { 
+    .staggered-grid { grid-template-columns: 1fr; width: 85vw; padding-top: 20vh; row-gap: 15vh; }
+    .archive-block { text-align: center; }
 }
 
 .a-meta {
     font-size: 0.8rem;
-    color: #888;
+    color: #E8943A; /* Using your safety orange for better legibility */
     margin-bottom: 1rem;
     text-transform: uppercase;
     font-weight: 700;
@@ -159,31 +121,21 @@
     line-height: 1.1;
     margin-bottom: 1rem;
     text-transform: uppercase;
-    font-weight: 100;
+    font-weight: 400;
     color: #fff;
+    /* FIX: Add slight shadow to pop off video background */
+    text-shadow: 0 4px 15px rgba(0,0,0,0.5);
 }
 
 .a-desc {
     font-size: 1.1rem;
-    color: #aaa;
-}
-
-.parallax-edge {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background-color: #E8943A;
-    opacity: 0;
-    z-index: 20;
+    color: #ccc;
 }
 
 /* =========================================
    FOOTER – BRUTALIST DESIGN & PARTICLES
    ========================================= */
 
-/* Footer container – dark background already set */
 .footer-section {
     position: absolute !important;
     bottom: 0;
@@ -193,7 +145,21 @@
     background-color: #0a0a0a;
     color: #e0e0e0;
     overflow: hidden;
-    z-index: 1 !important;
+    /* Lowest layer, accessible via pointer-events:none on the doors */
+    z-index: 1 !important; 
+}
+
+.footer-content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    padding: 5vh 5vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* FIX: Explicitly allow clicks on footer navigation and CTA */
+    pointer-events: auto; 
 }
 
 /* Background particles */
@@ -208,187 +174,75 @@
 .ash-particles {
     position: absolute;
     inset: 0;
-    pointer-events: none;
 }
 
 .ash-particle {
     position: absolute;
-    background-color: rgba(255, 255, 255, 0.149);
+    background-color: rgba(255, 255, 255, 0.15);
     width: 1px;
     height: 1px;
-    border-radius: 0;
     animation: driftAsh 50s linear infinite;
 }
 
 @keyframes driftAsh {
-    0% {
-        transform: translateY(-10vh) translateX(0) scale(1);
-        opacity: 0;
-    }
-
-    10% {
-        opacity: 0.9;
-    }
-
-    90% {
-        opacity: 0.6;
-    }
-
-    100% {
-        transform: translateY(110vh) translateX(20px) scale(1.5);
-        opacity: 0;
-    }
+    0% { transform: translateY(-10vh) translateX(0); opacity: 0; }
+    10% { opacity: 0.9; }
+    90% { opacity: 0.6; }
+    100% { transform: translateY(110vh) translateX(20px); opacity: 0; }
 }
 
-/* Main content wrapper */
-.footer-content {
-    position: relative;
-    z-index: 2;
-    width: 100%;
-    height: 100%;
-    padding: 5vh 5vw 5vh 5vw;
+/* Footer Layout & Typography */
+.footer-top {
     display: flex;
-    flex-direction: column;
     justify-content: space-between;
-    pointer-events: auto;
+    margin-top: 15vh;
 }
 
-/* Top row: two columns – only for desktop (≥1025px) */
-@media (min-width: 1025px) {
-    .footer-top {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        width: 100%;
-        margin-top: 20vh;
-        gap: 4rem;
-    }
-
-    .footer-nav {
-        justify-self: start;
-    }
-
-    .footer-contact-info {
-        justify-self: end;
-    }
-}
-
-/* Tablet and below (≤1024px): stack the top row */
 @media (max-width: 1024px) {
-    .footer-top {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-        margin-top: 20vh;
-        gap: 2rem;
-    }
-
-    .footer-nav {
-        text-align: center;
-    }
-
-    .footer-contact-info {
-        text-align: center;
-    }
-
-    .footer-contact-info address {
-        text-align: center;
-    }
-}
-
-/* Additional mobile refinements (optional) */
-@media (max-width: 768px) {
-    .footer-content {
-        padding: 3vh 5vw 3vh 5vw;
-    }
-
-    .footer-cta {
-        margin-top: 8vh;
-        margin-bottom: 4vh;
-    }
-
-    .footer-cta-link {
-        font-size: 2.5rem;
-    }
-
-    .footer-bottom {
-        margin-bottom: 5vh;
-    }
-}
-
-/* Navigation – thinned, left aligned (desktop) */
-.footer-nav-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+    .footer-top { flex-direction: column; align-items: center; text-align: center; gap: 2rem; }
 }
 
 .footer-nav-link {
     display: block;
     font-size: 1.2rem;
-    font-weight: 400;
     text-transform: uppercase;
     text-decoration: none;
-    color: #888888;
-    transition: color 0.2s ease;
-    margin-bottom: 0.75rem;
+    color: #888;
+    transition: color 0.3s;
+    margin-bottom: 0.8rem;
     letter-spacing: 0.1em;
 }
 
-.footer-nav-link:hover {
-    color: #ffffff;
-}
+.footer-nav-link:hover { color: #ffffff; }
 
-/* Contact info – right aligned (desktop) */
-.footer-contact-info address {
-    font-style: normal;
-    line-height: 1.6;
-    font-size: 0.9rem;
-    color: #888888;
-}
+.footer-contact-info address { font-style: normal; font-size: 0.9rem; color: #888; line-height: 1.8; }
+.footer-contact-info a { color: #888; text-decoration: none; transition: color 0.3s; }
+.footer-contact-info a:hover { color: #fff; }
 
-.footer-contact-info a {
-    color: #888888;
-    text-decoration: none;
-    border-bottom: none;
-    transition: color 0.2s;
-}
-
-.footer-contact-info a:hover {
-    color: #ffffff;
-}
-
-/* Center CTA */
-.footer-cta {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+/* Center CTA "LET'S TALK" */
+.footer-cta { flex: 1; display: flex; align-items: center; justify-content: center; }
 
 .footer-cta-link {
-    font-size: clamp(2.5rem, 8vw, 6rem);
-    font-weight: 400;
+    font-size: clamp(2.5rem, 8vw, 6.5rem);
     text-transform: uppercase;
     text-decoration: none;
-    color: #888888;
+    color: #888;
+    transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     letter-spacing: -0.02em;
-    transition: color 0.2s;
 }
 
-.footer-cta-link:hover {
-    color: #ffffff;
-}
+.footer-cta-link:hover { color: #ffffff; }
 
-/* Bottom copyright – centered */
-.footer-bottom {
+.footer-bottom { width: 100%; text-align: center; padding-bottom: 2rem; }
+.footer-copyright { font-size: 0.75rem; color: #555; letter-spacing: 0.05em; }
+
+.parallax-edge {
+    position: absolute;
+    bottom: 0;
+    left: 0;
     width: 100%;
-    text-align: center;
-}
-
-.footer-copyright {
-    font-size: 0.8rem;
-    color: #888888;
-    letter-spacing: 0.05em;
-    margin: 0;
+    height: 1px;
+    background-color: #E8943A;
+    opacity: 0;
+    z-index: 20;
 }

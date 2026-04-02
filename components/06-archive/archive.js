@@ -1,13 +1,15 @@
 export function initArchive() {
+    const archiveSection = document.getElementById('archive-section');
     const archiveMask = document.getElementById('archive-mask');
     const staggeredGrid = document.getElementById('staggered-grid');
     const footerContent = document.getElementById('footer-content');
     const archiveBlocks = document.querySelectorAll('.archive-block');
     const archiveBgPlate = document.getElementById('archive-bg-plate');
+    const doorGroup = document.getElementById('archive-door-group');
 
     if (!archiveMask || !staggeredGrid) return;
 
-    // Optional column ordering (unchanged)
+    // Apply column styling for the "staggered" look
     const columnOrder = [3, 2, 3, 1, 3, 2, 1, 2, 1, 3, 2, 3, 2, 1, 2, 3, 1, 2, 1, 3, 2, 1];
     archiveBlocks.forEach((block, idx) => {
         block.setAttribute('data-col', columnOrder[idx] || 1);
@@ -17,42 +19,50 @@ export function initArchive() {
         scrollTrigger: {
             trigger: "#archive-section",
             start: "top top",
-            end: "+=850%",
+            end: "+=800%", // Controlled duration for better pacing
             pin: "#archive-pin",
             scrub: 1,
             onUpdate: (self) => {
-                // When scroll progress > 0.75 (i.e., nearing the closing phase), create particles if not yet created
-                if (self.progress > 0.75 && !window.particlesCreated) {
+                // Initialize particles as we approach the footer phase
+                if (self.progress > 0.8 && !window.particlesCreated) {
                     initParticles();
                     window.particlesCreated = true;
+                }
+                
+                // DYNAMIC POINTER EVENTS: 
+                // If we are in the "opening" or "scrolling" phase, doors allow clicks.
+                // If we are in the "footer" phase (progress > 0.9), doors become invisible to mouse.
+                if (doorGroup) {
+                    doorGroup.style.pointerEvents = self.progress > 0.9 ? 'none' : 'auto';
                 }
             }
         }
     });
+
+    // Start video on enter
     splitTl.call(() => {
         const video = document.getElementById('archive-video');
-        if (video && video.paused) video.play().catch(e => console.warn('Video autoplay blocked', e));
-    }, null, null, 0); // at the very start of the timeline
+        if (video && video.paused) video.play().catch(e => {});
+    }, null, null, 0);
 
-
-    // 1. OPENING: 50% -> 0%
+    // 1. OPEN DOORS (0% to 100% visible)
     splitTl.fromTo(archiveMask,
         { clipPath: "inset(0% 50% 0% 50%)", webkitClipPath: "inset(0% 50% 0% 50%)" },
         { clipPath: "inset(0% 0% 0% 0%)", webkitClipPath: "inset(0% 0% 0% 0%)", duration: 1.5, ease: "power3.inOut" }
     );
 
-    // 2. SCROLL THE GRID – adjusted to end closer to the top
+    // 2. SCROLL THE PROJECT GRID
+    // We scroll until the very last project is seen
     splitTl.to(staggeredGrid, {
-        y: () => -(staggeredGrid.offsetHeight - window.innerHeight * 0.8),
+        y: () => -(staggeredGrid.scrollHeight - window.innerHeight * 0.7),
         ease: "none",
-        duration: 5
+        duration: 6
     }, "-=0.5");
 
-    // 3. STEALTH SWAP & PREP FOOTER
+    // 3. TRANSITION TO FOOTER
     splitTl.set(archiveBgPlate, { autoAlpha: 0 });
-    if (footerContent) { splitTl.set(footerContent, { yPercent: 40 }); }
 
-    // 4. CLOSING: 0% -> 50% & FOOTER PARALLAX
+    // 4. CLOSE DOORS & PARALLAX FOOTER UP
     splitTl.to(archiveMask, {
         clipPath: "inset(0% 50% 0% 50%)",
         webkitClipPath: "inset(0% 50% 0% 50%)",
@@ -61,51 +71,35 @@ export function initArchive() {
     }, "closePhase");
 
     if (footerContent) {
-        splitTl.to(footerContent, {
-            yPercent: 0,
-            duration: 8,
-            ease: "power3.out"
-        }, "closePhase");
+        splitTl.fromTo(footerContent, 
+            { yPercent: 40, opacity: 0 },
+            { yPercent: 0, opacity: 1, duration: 3, ease: "power3.out" }, 
+            "closePhase"
+        );
     }
 
-    // Inside initArchive, after timeline creation
-    splitTl.eventCallback("onComplete", () => {
-        const doorGroup = document.getElementById('archive-door-group');
-        if (doorGroup) doorGroup.style.pointerEvents = 'none';
-    });
-
-    // --- PARTICLE SYSTEM (VISIBLE) ---
+    // --- PARTICLE SYSTEM ---
     function initParticles() {
         const container = document.getElementById('ash-particles');
         if (!container) return;
-
-        // Clear existing particles to avoid duplicates (safe)
         container.innerHTML = '';
-
-        const PARTICLE_COUNT = 150; // more particles for density
+        const PARTICLE_COUNT = 100;
         for (let i = 0; i < PARTICLE_COUNT; i++) {
             const particle = document.createElement('div');
             particle.classList.add('ash-particle');
-
-            // Random size between 2px and 5px
-            const size = 2 + Math.random() * 3;
+            const size = 1 + Math.random() * 2;
             particle.style.width = `${size}px`;
             particle.style.height = `${size}px`;
-
-            // Random left position
             particle.style.left = `${Math.random() * 100}%`;
-
-            // Random animation delay and duration
-            particle.style.animationDelay = `${Math.random() * 15}s`;
+            particle.style.animationDelay = `${Math.random() * 10}s`;
             particle.style.animationDuration = `${10 + Math.random() * 20}s`;
-
-            // Slight random opacity (0.6 to 1)
-            particle.style.opacity = 0.6 + Math.random() * 0.4;
-
+            particle.style.opacity = 0.4 + Math.random() * 0.5;
             container.appendChild(particle);
         }
     }
 
-    // Call after a short delay to ensure DOM is ready (optional, but safe)
-    setTimeout(initParticles, 100);
+    // REFRESH: Crucial for ensuring the grid height is calculated after injection
+    setTimeout(() => {
+        ScrollTrigger.refresh();
+    }, 500);
 }
