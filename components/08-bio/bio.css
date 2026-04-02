@@ -1,5 +1,5 @@
 /* =========================================
-   THE BIO SECTION (Screenplay Brutalism)
+   THE BIO SECTION (Responsive Brutalism)
    ========================================= */
 .bio-section {
     display: none;
@@ -7,15 +7,13 @@
     min-height: 100vh;
     background-color: #ffffff;
     color: #111111;
-    padding-top: 30vh;
-    /* Adjusted slightly for better desktop balance */
+    padding-top: 180px; /* Space to clear the fixed header */
     padding-bottom: 10vh;
     z-index: 10;
     opacity: 0;
-    transition: opacity 0.5s ease;
+    transition: opacity 0.6s ease;
     box-sizing: border-box;
-    overflow-x: hidden;
-    /* CRITICAL: Prevents any horizontal scrolling */
+    overflow-x: hidden; /* Safety net for side-peeking photos */
 }
 
 .bio-section.is-active {
@@ -23,18 +21,28 @@
     opacity: 1;
 }
 
+/* THE GRID: 3-column layout (Left Margin / Center Text / Right Margin) */
 .bio-container {
-    position: relative;
-    max-width: calc(100vw - 100vh);
-    /* Keeps it central on ultra-wides */
+    display: grid;
+    grid-template-columns: 1fr minmax(300px, 800px) 1fr; 
+    gap: 2rem;
+    width: 95vw;
     margin: 0 auto;
+    align-items: start;
+    position: relative;
+}
+
+/* Constrain all text to the center column */
+.bio-header, 
+.bio-copy {
+    grid-column: 2; 
     width: 100%;
 }
 
 .bio-header {
     margin-bottom: 4rem;
     border-bottom: 2px solid #111;
-    padding-bottom: 1rem;
+    padding-bottom: 1.5rem;
 }
 
 .bio-header h2 {
@@ -42,44 +50,45 @@
     text-transform: uppercase;
     font-weight: 700;
     letter-spacing: -0.05em;
-    margin-bottom: 0.5rem;
+    margin: 0;
 }
 
 .bio-meta {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: #888;
     font-weight: 700;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.15em;
+    margin-top: 0.5rem;
 }
 
 .bio-copy {
-    font-size: clamp(1.1rem, 2vw, 1.4rem);
+    font-size: clamp(1.1rem, 2vw, 1.3rem);
     line-height: 1.8;
 }
 
 .bio-copy p {
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
 }
 
-/* Screenplay indent effect for middle paragraphs */
+/* Screenplay indent for middle paragraphs */
 .bio-copy p:nth-child(even) {
     padding-left: 10%;
     color: #333;
 }
 
 /* =========================================
-   DESKTOP: SCATTERED FLASH PHOTOS
+   THE PHOTO GUTTERS (Non-Aggressive Layout)
    ========================================= */
 .bio-photo {
-    position: absolute;
-    width: 25vw;
-    max-width: 350px;
+    position: sticky; /* Photos stay with you as you scroll */
+    top: 200px;
+    width: 20vw;
+    max-width: 320px;
     background: #fff;
-    padding: 10px 10px 40px 10px;
-    /* Polaroid style border */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    padding: 12px 12px 45px 12px;
+    box-shadow: 0 15px 45px rgba(0,0,0,0.1);
     z-index: 5;
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, z-index 0s;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease;
     cursor: crosshair;
 }
 
@@ -87,78 +96,89 @@
     width: 100%;
     height: auto;
     display: block;
-    filter: contrast(1.1) saturate(1.2);
-    /* Harsh flash look */
+    filter: contrast(1.05) saturate(1.1);
 }
 
 .photo-caption {
     position: absolute;
-    bottom: 12px;
-    left: 10px;
-    font-size: 0.75rem;
+    bottom: 15px;
+    left: 12px;
+    font-size: 0.7rem;
     font-weight: 700;
     color: #111;
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
 
+/* Position Left Photo in Column 1 */
 .photo-left {
-    top: 15%;
-    left: -30%;
-    transform: rotate(-4deg);
+    grid-column: 1;
+    justify-self: end; /* Pushes it right against the text column edge */
+    transform: rotate(-4deg) translateY(50px);
 }
 
+/* Position Right Photo in Column 3 */
 .photo-right {
-    top: 45%;
-    right: -30%;
+    grid-column: 3;
+    justify-self: start; /* Pushes it left against the text column edge */
+    margin-top: 25vh; /* Staggers it lower than the first photo */
     transform: rotate(3deg);
 }
 
+/* Subtle Interaction: Straighen on hover */
 .bio-photo:hover {
-    z-index: 10;
-    transform: rotate(0deg) scale(1.05) translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+    z-index: 20;
+    transform: rotate(0) scale(1.05);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.2);
 }
 
 /* =========================================
-   MOBILE / TABLET FALLBACK (The Reality Check)
+   TABLET & MOBILE RESPONSIVENESS
    ========================================= */
-@media (max-width: 1024px) {
 
-    .bio-section {
-        padding-top: 15vh;
-        /* Much smaller so they see content immediately on phone */
-        padding-bottom: 5vh;
-    }
-
+/* Tablet Breakpoint: If screen gets too narrow for 3 columns */
+@media (max-width: 1200px) {
     .bio-container {
-        max-width: 90vw;
-        /* Keeps everything safely inside the phone screen */
+        grid-template-columns: 1fr; /* Stack into 1 column */
+        max-width: 85vw;
+        gap: 0;
     }
 
-    .bio-copy p:nth-child(even) {
-        padding-left: 5%;
-        /* Less aggressive indent on small screens */
+    .bio-header, .bio-copy {
+        grid-column: 1;
     }
 
-    /* Put the photos back into the normal document flow */
     .bio-photo {
-        position: relative;
-        /* Stops them from flying off screen */
-        width: 100%;
-        max-width: 100%;
+        position: relative; /* Stop being sticky */
         top: auto;
+        width: 100%;
+        max-width: 500px;
+        margin: 4rem auto;
+        grid-column: 1;
+        transform: rotate(-1deg) !important; /* Minimal rotation on mobile */
+        box-shadow: none; /* Cleaner look for mobile */
+        padding: 0;
+        background: transparent;
+    }
+
+    .bio-photo img {
+        margin-bottom: 1rem;
+    }
+
+    .photo-caption {
+        position: relative;
+        bottom: auto;
         left: auto;
-        right: auto;
-        transform: none;
-        /* Removes the rotation */
-        margin-top: 3rem;
         margin-bottom: 2rem;
     }
+}
 
-    /* We don't need hover effects on touch screens */
-    .bio-photo:hover {
-        transform: none;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+/* Phones */
+@media (max-width: 768px) {
+    .bio-section {
+        padding-top: 120px;
+    }
+    .bio-copy p:nth-child(even) {
+        padding-left: 5%;
     }
 }
