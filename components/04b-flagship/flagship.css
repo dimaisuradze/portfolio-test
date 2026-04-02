@@ -1,12 +1,12 @@
 :root {
     --fs-aspect: 1.17650121486;
-    --fs-width: 38vw;
+    --fs-width: 38vw; 
 }
 
 .flagship-section {
     position: relative;
     width: 100vw;
-    height: 100vh;
+    height: 100vh; /* Desktop stays fixed */
     background-color: #050505;
     overflow: hidden;
     z-index: 5;
@@ -21,8 +21,7 @@
     min-width: 100%;
     min-height: 100%;
     object-fit: cover;
-    filter: blur(5px) brightness(0.25);
-    /* Darker and blurrier to pop the photos */
+    filter: blur(35px) brightness(0.25);
     z-index: 1;
 }
 
@@ -37,15 +36,14 @@
     align-items: center;
 }
 
-/* ALIGNMENT LOGIC */
+/* DESKTOP CORNERS */
 .fs-corner {
     position: absolute;
     z-index: 50;
     pointer-events: none;
 }
 
-.fs-top-left,
-.fs-top-right {
+.fs-top-left, .fs-top-right {
     top: calc(50vh - (var(--fs-height) / 2));
 }
 
@@ -53,88 +51,28 @@
     bottom: calc(50vh - (var(--fs-height) / 2));
 }
 
-.fs-top-left {
-    left: 4vw;
-    max-width: 25vw;
-}
-
-.fs-top-right {
-    right: 4vw;
-    text-align: right;
-    max-width: 25vw;
-}
-
-.fs-bottom-left {
-    left: 4vw;
-    max-width: 25vw;
-}
+.fs-top-left { left: 4vw; max-width: 25vw; }
+.fs-top-right { right: 4vw; text-align: right; max-width: 25vw; }
+.fs-bottom-left { left: 4vw; max-width: 25vw; }
 
 /* TYPOGRAPHY */
-.fs-label {
-    color: #E8943A;
-    font-size: 0.65rem;
-    letter-spacing: 0.3em;
-    margin-bottom: 0.8rem;
-    text-transform: uppercase;
-}
+.fs-label { color: #E8943A; font-size: 0.65rem; letter-spacing: 0.3em; margin-bottom: 0.8rem; text-transform: uppercase; }
+.fs-title { color: #ffffff; font-size: clamp(1.4rem, 3vw, 2.8rem); font-weight: 700; line-height: 1; margin: 0; text-transform: uppercase; }
+.fs-subtitle { color: #555; font-size: 0.75rem; margin-top: 0.5rem; letter-spacing: 0.2em; text-transform: uppercase; }
+.fs-specs { list-style: none; padding: 0; margin: 0; font-size: 0.7rem; line-height: 2.5; color: #fff; text-transform: uppercase; }
+.fs-specs span { color: #333; margin-right: 0.5rem; }
+.fs-desc { color: #777; font-size: 0.85rem; line-height: 1.8; margin: 0; }
 
-.fs-title {
-    color: #ffffff;
-    font-size: clamp(1.4rem, 3vw, 2.8rem);
-    font-weight: 700;
-    line-height: 1;
-    margin: 0;
-    text-transform: uppercase;
-}
-
-.fs-subtitle {
-    color: #555;
-    font-size: 0.75rem;
-    margin-top: 0.5rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-}
-
-.fs-specs {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    font-size: 0.7rem;
-    line-height: 2.5;
-    color: #fff;
-    text-transform: uppercase;
-}
-
-.fs-specs span {
-    color: #333;
-    margin-right: 0.5rem;
-}
-
-.fs-desc {
-    color: #777;
-    font-size: 0.85rem;
-    line-height: 1.8;
-    margin: 0;
-}
-
-/* THE CENTER SLIDESHOW - FRAMELESS */
+/* THE CENTER SLIDESHOW */
 .fs-center-focus {
     position: relative;
     width: var(--fs-width);
     aspect-ratio: var(--fs-aspect);
     background: transparent;
-    /* REMOVED WHITE BACKGROUND */
-    box-shadow: 0 40px 100px rgba(0, 0, 0, 1);
+    box-shadow: 0 40px 100px rgba(0,0,0,1);
     overflow: hidden;
     z-index: 10;
-    /* Optional: A very thin stroke to define the edges */
-    border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.flipbook-container {
-    position: relative;
-    width: 100%;
-    height: 100%;
+    border: 1px solid rgba(255,255,255,0.05); 
 }
 
 .flip-frame {
@@ -144,72 +82,85 @@
     height: 100%;
     opacity: 0;
     padding: 0;
-    /* REMOVED PADDING - FULL BLEED */
-    object-fit: cover;
-    /* SNAPS TO EDGES */
+    object-fit: cover; /* This makes photos full-bleed in the box */
     background: transparent;
 }
 
-/* Logo specific tweak: if you want the first logos to still have a bit of 
-   breathing room so they aren't cut off by the edges: */
-.flip-frame:nth-child(1),
-.flip-frame:nth-child(8) {
+/* Keep logos 'contained' so they aren't cut off */
+.flip-frame:nth-child(1), .flip-frame:nth-child(8) {
     object-fit: contain;
-    background: #fff;
-    /* Keeps the logo background white while everything else is raw */
+    background: #fff; 
     padding: 10%;
 }
 
-.flip-frame.active {
-    opacity: 1;
-}
+.flip-frame.active { opacity: 1; }
 
 .scanner-line {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 1px;
+    top: 0; left: 0; width: 100%; height: 1px;
     background: rgba(232, 148, 58, 1);
     box-shadow: 0 0 15px rgba(232, 148, 58, 0.8);
     z-index: 60;
     animation: scanLine 4s linear infinite;
 }
 
-@keyframes scanLine {
-    0% {
-        top: 0%;
+@keyframes scanLine { 0% { top: 0%; } 100% { top: 100%; } }
+
+/* =========================================
+   MOBILE / TABLET: THE "NO-CROP" FIX
+   ========================================= */
+@media (max-width: 1100px) {
+    .flagship-section {
+        height: auto; /* ALLOWS SECTION TO GROW */
+        min-height: 100vh;
+        padding-top: 140px; /* Space for the floating header */
+        padding-bottom: 80px;
     }
 
-    100% {
-        top: 100%;
-    }
-}
-
-@media (max-width: 1024px) {
     .flagship-container {
-        flex-direction: column;
-        padding: 120px 2rem;
+        flex-direction: column; /* STACK EVERYTHING */
         justify-content: flex-start;
+        align-items: center;
+        height: auto;
     }
 
+    /* THE SLIDESHOW BOX ON MOBILE */
     .fs-center-focus {
-        width: 90vw;
-        order: -1;
-        margin-bottom: 2rem;
-        aspect-ratio: var(--fs-aspect);
+        width: 90vw; /* Almost full width on phone */
+        order: 1; /* Puts image first */
+        margin-bottom: 3rem;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.5);
     }
 
+    /* THE TEXT BLOCKS ON MOBILE */
     .fs-corner {
-        position: relative;
-        inset: auto;
-        width: 100%;
-        margin-bottom: 1.5rem;
+        position: relative; /* STOP BEING ABSOLUTE */
+        top: auto;
+        left: auto;
+        right: auto;
+        bottom: auto;
+        width: 90vw;
+        max-width: 90vw !important;
         text-align: left;
-        max-width: 100% !important;
+        margin-bottom: 2rem;
+        order: 2; /* Puts text under the image */
     }
 
     .fs-top-right {
         text-align: left;
+        margin-bottom: 3rem;
+    }
+
+    .fs-bottom-left {
+        order: 3; /* Project description at the very bottom */
+    }
+
+    .fs-title {
+        font-size: 2rem; /* Big and readable on phone */
+    }
+
+    .fs-desc {
+        font-size: 1rem;
+        line-height: 1.6;
     }
 }
