@@ -1,0 +1,12 @@
+{
+    "rewrites": [
+        {
+            "source": "/bio",
+            "destination": "/index.html"
+        },
+        {
+            "source": "/(.*)",
+            "destination": "/index.html"
+        }
+    ]
+}
