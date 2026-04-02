@@ -5,9 +5,11 @@
 @import url('./components/02-header/header.css');
 @import url('./components/03-hero/hero.css');
 @import url('./components/04-marquee/marquee.css');
+@import url('./components/04b-flagship/flagship.css');
 @import url('./components/05-accordion/accordion.css');
 @import url('./components/06-archive/archive.css');
 @import url('./components/07-mouse/mouse.css');
+@import url('./components/08-bio/bio.css');
 
 /* =========================================
    GLOBAL VARIABLES & HYGIENE

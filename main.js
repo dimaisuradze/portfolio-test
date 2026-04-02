@@ -2,6 +2,7 @@ import { initPreloader } from './components/01-preloader/preloader.js';
 import { initHeader } from './components/02-header/header.js';
 import { initHeroScramble } from './components/03-hero/hero.js';
 import { initMarquee } from './components/04-marquee/marquee.js';
+import { initFlagship } from './components/04b-flagship/flagship.js';
 import { initAccordion } from './components/05-accordion/accordion.js';
 import { initArchive } from './components/06-archive/archive.js';
 import { initMouseTracker } from './components/07-mouse/mouse.js';
@@ -11,12 +12,13 @@ import { initBioRouter } from './components/08-bio/bio.js';
 // =========================================
 // 1. Define all component HTML files to inject
 // =========================================
-const componentsToLoad =[
+const componentsToLoad = [
     { id: 'layer-preloader', url: './components/01-preloader/preloader.html' },
     { id: 'layer-header', url: './components/02-header/header.html' },
     { id: 'layer-mouse-trackers', url: './components/07-mouse/mouse.html' },
     { id: 'layer-hero', url: './components/03-hero/hero.html' },
     { id: 'layer-marquee', url: './components/04-marquee/marquee.html' },
+    { id: 'layer-flagship', url: './components/04b-flagship/flagship.html' },
     { id: 'layer-accordion', url: './components/05-accordion/accordion.html' },
     { id: 'layer-archive', url: './components/06-archive/archive.html' },
     // [NEW] Add the Bio layer to the fetch array
@@ -93,9 +95,10 @@ async function bootApplication() {
     initHeader();
     initMouseTracker();
     initMarquee();
+    initFlagship();
     initAccordion();
     initArchive();
-    
+
     // [NEW] Boot the Bio SPA Router
     initBioRouter();
 

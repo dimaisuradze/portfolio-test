@@ -1,6 +1,8 @@
 export function initBioRouter() {
-    const btnWork = document.getElementById('btn-work');
-    const btnBio = document.getElementById('btn-bio');
+    // 1. Target ALL possible WORK and BIO buttons (Both Menu & Footer)
+    const btnWorks = document.querySelectorAll('#btn-work, a[href="#work-section"]');
+    const btnBios = document.querySelectorAll('#btn-bio, #bio-nav-link');
+
     const bioSection = document.getElementById('bio-section');
     const workLayers = [
         document.getElementById('layer-hero'),
@@ -10,54 +12,68 @@ export function initBioRouter() {
     ];
     const menuOverlay = document.getElementById('fullscreen-menu');
 
-    if (!btnWork || !btnBio || !bioSection || workLayers.some(layer => !layer)) {
-        console.warn('Bio router missing required elements');
+    if (!bioSection) {
+        console.warn('Bio router: bio-section not found in DOM yet.');
         return;
     }
 
-    // Helper to close menu (reuse existing logic)
+    // Helper to close menu
     const closeMenu = () => {
-        menuOverlay.classList.remove('is-open');
-        menuOverlay.setAttribute('aria-hidden', 'true');
+        if (menuOverlay) {
+            menuOverlay.classList.remove('is-open');
+            menuOverlay.setAttribute('aria-hidden', 'true');
+        }
         if (window.lenis) window.lenis.start();
     };
 
-    // Switch to BIO
-    btnBio.addEventListener('click', () => {
-        // Update active states
-        btnWork.classList.remove('is-active');
-        btnBio.classList.add('is-active');
+    // --- Switch to BIO ---
+    const goToBio = (e) => {
+        e.preventDefault(); // STOPS the page from jumping up instantly
+
+        // Update visual active states in menu
+        const menuWorkBtn = document.getElementById('btn-work');
+        const menuBioBtn = document.getElementById('btn-bio');
+        if (menuWorkBtn) menuWorkBtn.classList.remove('is-active');
+        if (menuBioBtn) menuBioBtn.classList.add('is-active');
 
         // Hide work layers, show bio
-        workLayers.forEach(layer => { layer.style.display = 'none'; });
+        workLayers.forEach(layer => { if (layer) layer.style.display = 'none'; });
         bioSection.style.display = 'block';
 
-        // Force bio to be visible
-        bioSection.classList.add('is-active');
+        // Slight timeout allows CSS to process the display:block before fading in
+        setTimeout(() => {
+            bioSection.classList.add('is-active');
+        }, 50);
 
-        // Reset scroll position to top
+        // Reset scroll position to top using Lenis
         if (window.lenis) window.lenis.scrollTo(0, { immediate: true });
 
-        // Close menu
         closeMenu();
-    });
+        ScrollTrigger.refresh(); // Tell GSAP the layout changed
+    };
 
-    // Switch to WORK
-    btnWork.addEventListener('click', () => {
-        // Update active states
-        btnBio.classList.remove('is-active');
-        btnWork.classList.add('is-active');
+    // --- Switch to WORK ---
+    const goToWork = (e) => {
+        e.preventDefault(); // STOPS the page from jumping
+
+        // Update visual active states in menu
+        const menuWorkBtn = document.getElementById('btn-work');
+        const menuBioBtn = document.getElementById('btn-bio');
+        if (menuBioBtn) menuBioBtn.classList.remove('is-active');
+        if (menuWorkBtn) menuWorkBtn.classList.add('is-active');
 
         // Hide bio, show work layers
-        bioSection.style.display = 'none';
         bioSection.classList.remove('is-active');
-        workLayers.forEach(layer => { layer.style.display = 'block'; });
+        bioSection.style.display = 'none';
+        workLayers.forEach(layer => { if (layer) layer.style.display = 'block'; });
 
         // Reset scroll and close menu
         if (window.lenis) window.lenis.scrollTo(0, { immediate: true });
         closeMenu();
+        ScrollTrigger.refresh(); // Tell GSAP the layout changed
+    };
 
-        // Refresh ScrollTrigger after layout change
-        ScrollTrigger.refresh();
-    });
+    // 2. Attach the click events to ALL buttons found
+    btnBios.forEach(btn => btn.addEventListener('click', goToBio));
+    btnWorks.forEach(btn => btn.addEventListener('click', goToWork));
 }

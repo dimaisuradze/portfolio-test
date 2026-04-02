@@ -7,13 +7,15 @@
     min-height: 100vh;
     background-color: #ffffff;
     color: #111111;
-    padding-top: 40vh;
-    /* top margin of 40vh */
+    padding-top: 30vh;
+    /* Adjusted slightly for better desktop balance */
     padding-bottom: 10vh;
     z-index: 10;
     opacity: 0;
     transition: opacity 0.5s ease;
     box-sizing: border-box;
+    overflow-x: hidden;
+    /* CRITICAL: Prevents any horizontal scrolling */
 }
 
 .bio-section.is-active {
@@ -22,19 +24,11 @@
 }
 
 .bio-container {
+    position: relative;
     max-width: calc(100vw - 100vh);
-    /* width = viewport width minus 2*50vh */
+    /* Keeps it central on ultra-wides */
     margin: 0 auto;
-    /* auto horizontal margins */
     width: 100%;
-}
-
-/* Fallback for screens where 100vh > viewport width (e.g., mobile portrait) */
-@media (max-width: 768px) {
-    .bio-container {
-        max-width: 90vw;
-        margin: 0 auto;
-    }
 }
 
 .bio-header {
@@ -71,4 +65,100 @@
 .bio-copy p:nth-child(even) {
     padding-left: 10%;
     color: #333;
+}
+
+/* =========================================
+   DESKTOP: SCATTERED FLASH PHOTOS
+   ========================================= */
+.bio-photo {
+    position: absolute;
+    width: 25vw;
+    max-width: 350px;
+    background: #fff;
+    padding: 10px 10px 40px 10px;
+    /* Polaroid style border */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    z-index: 5;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, z-index 0s;
+    cursor: crosshair;
+}
+
+.bio-photo img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: contrast(1.1) saturate(1.2);
+    /* Harsh flash look */
+}
+
+.photo-caption {
+    position: absolute;
+    bottom: 12px;
+    left: 10px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #111;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.photo-left {
+    top: 15%;
+    left: -30%;
+    transform: rotate(-4deg);
+}
+
+.photo-right {
+    top: 45%;
+    right: -30%;
+    transform: rotate(3deg);
+}
+
+.bio-photo:hover {
+    z-index: 10;
+    transform: rotate(0deg) scale(1.05) translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+}
+
+/* =========================================
+   MOBILE / TABLET FALLBACK (The Reality Check)
+   ========================================= */
+@media (max-width: 1024px) {
+
+    .bio-section {
+        padding-top: 15vh;
+        /* Much smaller so they see content immediately on phone */
+        padding-bottom: 5vh;
+    }
+
+    .bio-container {
+        max-width: 90vw;
+        /* Keeps everything safely inside the phone screen */
+    }
+
+    .bio-copy p:nth-child(even) {
+        padding-left: 5%;
+        /* Less aggressive indent on small screens */
+    }
+
+    /* Put the photos back into the normal document flow */
+    .bio-photo {
+        position: relative;
+        /* Stops them from flying off screen */
+        width: 100%;
+        max-width: 100%;
+        top: auto;
+        left: auto;
+        right: auto;
+        transform: none;
+        /* Removes the rotation */
+        margin-top: 3rem;
+        margin-bottom: 2rem;
+    }
+
+    /* We don't need hover effects on touch screens */
+    .bio-photo:hover {
+        transform: none;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
 }
